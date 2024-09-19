@@ -8,6 +8,10 @@ class Hello {
 }
 
 fun main() {
+
+    val p = Person()
+    p.hello()
+
     println("Hello Kotlin!")
     val age = 20
     val population:Long = 9999L
