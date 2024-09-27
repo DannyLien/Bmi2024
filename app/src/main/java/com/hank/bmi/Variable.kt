@@ -1,6 +1,10 @@
 package com.hank.bmi
 
 fun main() {
+    var name: String? = "Hank"
+    println(name?.length)
+    println(name ?: 0)
+
     var counter = 0
     counter = counter + 1
     counter++
