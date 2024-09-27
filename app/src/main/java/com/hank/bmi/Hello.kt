@@ -1,5 +1,6 @@
 package com.hank.bmi
 
+import android.webkit.PermissionRequest
 import androidx.compose.ui.Modifier
 
 class Hello {
@@ -8,13 +9,23 @@ class Hello {
 }
 
 fun main() {
-
-    val p = Person()
+    val p = Person("Jack", 65.5f, 1.7f)
+    println(p.bmi())
+    val hank = Person("Hank", 70f, 1.75f)
+    println("${p.name}  ${p.bmi()}")
+    println("${hank.name}  ${hank.bmi()}")
     p.hello()
 
+    //BMI
+    val w = 65.5f
+    val h = 1.7f
+    val bmi = w / (h * h)
+    println("BMI:${bmi}")
+
+    /*
     println("Hello Kotlin!")
     val age = 20
-    val population:Long = 9999L
+    val population: Long = 9999L
     println(population)
     println(age.inc())
     println(age)
@@ -31,6 +42,6 @@ fun main() {
     //Char
     val c = 'A'
     println(c)
-
+    */
 }
 
