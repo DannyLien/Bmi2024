@@ -4,10 +4,14 @@ class Student(
     val id: String, val name: String,
     var english: Int = 0, var math: Int = 0
 ) {
-//    constructor(id: String, name: String) : this(id, name, 0, 0)
+    //    constructor(id: String, name: String) : this(id, name, 0, 0)
+    companion object {
+        var pass = 60
+    }
 
     fun print() {
-        println("$id\t$name\t$english\t$math\t${average()}\t${grading()}")
+        val mark = if (average() < pass) "*" else " "
+        println("$id\t$name\t$english\t$math\t${average()}$mark\t${grading()}")
     }
 
     fun average() = (english + math) / 2
@@ -24,8 +28,9 @@ class Student(
 
 
 fun main() {
+    Student.pass = 50
     val students = listOf<Student>(
-        Student("001", "Jack", 95, 99),
+        Student("001", "Jack", 40, 50),
         Student("002", "Hank", 66, 87),
         Student("003", "Jane")
     )
