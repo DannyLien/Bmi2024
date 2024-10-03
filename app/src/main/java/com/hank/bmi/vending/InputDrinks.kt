@@ -10,12 +10,16 @@ fun main() {
     while (line != null) {
         println(line)
         val tokens = line.split(",")
-        val drink = Drink(
-            tokens[0],
-            tokens[1].toInt(),
-            tokens[2].toInt(),
-        )
-        drinks.add(drink)
+        try {
+            val drink = Drink(
+                tokens[0],
+                tokens[1].toInt(),
+                tokens[2].toInt(),
+            )
+            drinks.add(drink)
+        } catch (ex: IndexOutOfBoundsException) {
+            println("Invatid line data format!")
+        }
         line = input.readLine()
     }
     println(drinks)
