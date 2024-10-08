@@ -13,31 +13,29 @@ import kotlin.random.Random
 class MainActivity2 : AppCompatActivity() {
     private val TAG: String? = MainActivity2::class.java.simpleName
     private lateinit var binding: ActivityMainBinding
-    val secret = (1..10).random()
+//    val secret = (1..10).random()
+    val game = GuessGame()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        Toast.makeText(this, "secret:$secret", Toast.LENGTH_LONG).show()
+        Toast.makeText(this, "secret:${game.secret}", Toast.LENGTH_LONG).show()
 
     }
 
     fun guess(view: View) {
         if (!binding.number.text.toString().equals("")) {
             val num = binding.number.text.toString().toInt()
-            Log.d(TAG, "guess: $num")
-            val message = if (num > secret) {
-                getString(R.string.smaller)
-            } else if (num < secret) {
-                getString(R.string.bigger)
-            } else {
-                getString(R.string.you_got_it)
+            val massage = when(game.guess(num)){
+                GuessGame.Status.SMALLER->getString(R.string.smaller)
+                GuessGame.Status.BIGGER->getString(R.string.bigger)
+                else -> getString(R.string.you_got_it)
             }
             AlertDialog.Builder(this)
                 .setTitle(getString(R.string.info))
-                .setMessage(message)
+                .setMessage(massage)
                 .setPositiveButton(getString(R.string.ok), null)
                 .show()
         } else {
