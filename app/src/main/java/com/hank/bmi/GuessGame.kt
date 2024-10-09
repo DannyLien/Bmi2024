@@ -19,9 +19,10 @@ class GuessGame {
     }
 
     fun reset() {
-        secret = (1..10).random()
         counter = 0
+        secret = (1..10).random()
     }
+
 }
 
 fun main() {
