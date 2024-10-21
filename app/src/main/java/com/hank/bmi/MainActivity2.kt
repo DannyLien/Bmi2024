@@ -2,6 +2,7 @@ package com.hank.bmi
 
 import android.content.DialogInterface
 import android.content.DialogInterface.OnClickListener
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -16,6 +17,7 @@ import okhttp3.internal.notify
 import kotlin.random.Random
 
 class MainActivity2 : AppCompatActivity() {
+    private val NICKNAME_REQ: Int = 11
     private lateinit var viewModel: GuessViewModel
     private val TAG: String? = MainActivity2::class.java.simpleName
     private lateinit var binding: ActivityMainBinding
@@ -103,4 +105,21 @@ class MainActivity2 : AppCompatActivity() {
         */
     }
 
+    fun setNickname(view: View) {
+        val intent = Intent(this, NickActivity::class.java)
+        intent.putExtra("EXTRA_LEVEL", 777)
+        intent.putExtra("NAME", "Danny")
+//        startActivity(intent)
+        startActivityForResult(intent, NICKNAME_REQ)
+
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == NICKNAME_REQ) {
+            Log.d(TAG, "onActivityResult, resultCode: $resultCode")
+            val nickname = data?.getStringExtra("NICK")
+            Log.d(TAG, "onActivityResult, data: $nickname")
+        }
+    }
 }
