@@ -41,10 +41,42 @@ class MainActivity2 : AppCompatActivity() {
 
         }
 
+    override fun onRestart() {
+        super.onRestart()
+        Log.d(TAG, "onRestart: Act86")
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.d(TAG, "onResume: Act86")
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Log.d(TAG, "onPause: ACT86")
+    }
+
+    override fun onStart() {
+        super.onStart()
+        Log.d(TAG, "onStart: Act86")
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Log.d(TAG, "onStop: Act86")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d(TAG, "onDestroy: Act86")
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        Log.d(TAG, "onCreate: Act86")
 
 //        Toast.makeText(this, "secret:${game.secret}", Toast.LENGTH_LONG).show()
 
