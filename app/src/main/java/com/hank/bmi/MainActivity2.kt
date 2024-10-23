@@ -155,13 +155,18 @@ class MainActivity2 : AppCompatActivity() {
     }
 
     fun setNickname(view: View) {
-        val intent = Intent(this, NickActivity::class.java)
-        intent.putExtra("EXTRA_LEVEL", 777)
-        intent.putExtra("NAME", "Danny")
-//        startActivity(intent)
-//        startActivityForResult(intent, NICKNAME_REQ)
-        requestNickname.launch(intent)
-
+//        val intent = Intent(this, NickActivity::class.java)
+//        intent.putExtra("EXTRA_LEVEL", 777)
+//        intent.putExtra("NAME", "Danny")
+////        startActivity(intent)
+////        startActivityForResult(intent, NICKNAME_REQ)
+//        requestNickname.launch(intent)
+        Intent(this, NickActivity::class.java).apply {
+            putExtra("LEVEL",555)
+            putExtra("NAME","Hank")
+        }.also {
+            requestNickname.launch(it)
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
