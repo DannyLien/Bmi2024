@@ -9,6 +9,7 @@ import android.util.Log
 import android.util.Range
 import android.view.View
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -21,8 +22,24 @@ class MainActivity2 : AppCompatActivity() {
     private lateinit var viewModel: GuessViewModel
     private val TAG: String? = MainActivity2::class.java.simpleName
     private lateinit var binding: ActivityMainBinding
-//    val secret = (1..10).random()
-//    val game = GuessGame()
+    //    val secret = (1..10).random()
+    //    val game = GuessGame()
+    val requestNickname =
+        registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) {
+            //SharedPreferrences
+            val nickname = getSharedPreferences("guess", MODE_PRIVATE)
+                .getString("nickname",null)
+            Log.d(TAG, "MainActivity2: SharedPreferences: $nickname")
+
+            //Intent
+            if (it.resultCode == RESULT_OK) {
+                val nickname = it.data?.getStringExtra("NICK")
+                Log.d(TAG, "MainActivity2: Result: $nickname")
+            }
+
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -110,7 +127,8 @@ class MainActivity2 : AppCompatActivity() {
         intent.putExtra("EXTRA_LEVEL", 777)
         intent.putExtra("NAME", "Danny")
 //        startActivity(intent)
-        startActivityForResult(intent, NICKNAME_REQ)
+//        startActivityForResult(intent, NICKNAME_REQ)
+        requestNickname.launch(intent)
 
     }
 

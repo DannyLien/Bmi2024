@@ -19,15 +19,22 @@ class NickActivity : AppCompatActivity() {
         val name = intent.getStringExtra("NAME")
         Log.d(TAG, "onCreate: $level , $name")
 
-
     }
 
 
     fun save(view: View) {
         if (!binding.edNickname.text.toString().equals("")) {
             val nickname = binding.edNickname.text.toString()
+            //SharedPreferences()
+            getSharedPreferences("guess", MODE_PRIVATE)
+                .edit()
+                .putString("nickname", nickname)
+                .apply()
+
+            //Intent
             setResult(RESULT_OK, intent.putExtra("NICK", nickname))
             finish()
+
         }
 
     }
