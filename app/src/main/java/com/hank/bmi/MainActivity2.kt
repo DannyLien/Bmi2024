@@ -13,6 +13,9 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.room.Room
+import com.hank.bmi.data.GameDatabase
+import com.hank.bmi.data.Record
 import com.hank.bmi.databinding.ActivityMainBinding
 import okhttp3.internal.notify
 import kotlin.random.Random
@@ -22,6 +25,7 @@ class MainActivity2 : AppCompatActivity() {
     private lateinit var viewModel: GuessViewModel
     private val TAG: String? = MainActivity2::class.java.simpleName
     private lateinit var binding: ActivityMainBinding
+
     //    val secret = (1..10).random()
     //    val game = GuessGame()
     val requestNickname =
@@ -30,7 +34,7 @@ class MainActivity2 : AppCompatActivity() {
         ) {
             //SharedPreferrences
             val nickname = getSharedPreferences("guess", MODE_PRIVATE)
-                .getString("nickname",null)
+                .getString("nickname", null)
             Log.d(TAG, "MainActivity2: SharedPreferences: $nickname")
 
             //Intent
@@ -111,6 +115,20 @@ class MainActivity2 : AppCompatActivity() {
                     }).show()
             }
         })
+        //Room
+        val database = Room.databaseBuilder(
+            this,
+            GameDatabase::class.java, "game.db"
+        ).build()
+        val record = Record("Hank", 7)
+        Thread {
+//            database.recordDao().insert(record)
+            val list = database.recordDao().getAll()
+            list.forEach {
+                Log.d(TAG, "MainActivity2: getAll: ${it.nickname}")
+            }
+        }.start()
+
     }
 
     fun guess(view: View) {
@@ -162,8 +180,8 @@ class MainActivity2 : AppCompatActivity() {
 ////        startActivityForResult(intent, NICKNAME_REQ)
 //        requestNickname.launch(intent)
         Intent(this, NickActivity::class.java).apply {
-            putExtra("LEVEL",555)
-            putExtra("NAME","Hank")
+            putExtra("LEVEL", 555)
+            putExtra("NAME", "Hank")
         }.also {
             requestNickname.launch(it)
         }
