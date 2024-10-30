@@ -3,6 +3,7 @@ package com.hank.bmi
 import android.content.DialogInterface
 import android.content.DialogInterface.OnClickListener
 import android.content.Intent
+import android.os.AsyncTask
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -13,14 +14,23 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.loader.content.AsyncTaskLoader
 import androidx.room.Room
 import com.hank.bmi.data.GameDatabase
 import com.hank.bmi.data.Record
 import com.hank.bmi.databinding.ActivityMainBinding
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import okhttp3.internal.notify
+import org.json.JSONObject
+import java.net.URL
+import kotlin.coroutines.CoroutineContext
 import kotlin.random.Random
 
-class MainActivity2 : AppCompatActivity() {
+class MainActivity2 : AppCompatActivity(), CoroutineScope {
+    private val job = Job() + Dispatchers.IO
     private val NICKNAME_REQ: Int = 11
     private lateinit var viewModel: GuessViewModel
     private val TAG: String? = MainActivity2::class.java.simpleName
@@ -115,19 +125,64 @@ class MainActivity2 : AppCompatActivity() {
                     }).show()
             }
         })
+
         //Room
-        val database = Room.databaseBuilder(
-            this,
-            GameDatabase::class.java, "game.db"
-        ).build()
-        val record = Record("Hank", 7)
+        val record1 = Record("Hank", 3)
+        val record2 = Record("Eric", 4)
+        val record3 = Record("Moon", 5)
+        val record4 = Record("Tom ", 6)
+        val record5 = Record("Jack", 7)
+
+        AsyncTask.execute {
+
+        }
+
         Thread {
-//            database.recordDao().insert(record)
-            val list = database.recordDao().getAll()
-            list.forEach {
-                Log.d(TAG, "MainActivity2: getAll: ${it.nickname}")
-            }
+//            GameDatabase.getInstance(this)?.recordDao()?.insert(record1)
+//            GameDatabase.getInstance(this)?.recordDao()?.insert(record2)
+//            GameDatabase.getInstance(this)?.recordDao()?.insert(record3)
+//            GameDatabase.getInstance(this)?.recordDao()?.insert(record4)
+//            GameDatabase.getInstance(this)?.recordDao()?.insert(record5)
+
+            GameDatabase.getInstance(this)?.recordDao()?.getAll()
+                ?.forEach {
+                    Log.d(
+                        TAG, "MainActivity: Room: " +
+                                "${it.id} , ${it.nickname} , ${it.counter}"
+                    )
+                }
         }.start()
+
+//        val database = Room.databaseBuilder(
+//            this,
+//            GameDatabase::class.java, "game.db"
+//        ).build()
+//        Thread {
+//            database.recordDao().insert(record1)
+//            database.recordDao().insert(record2)
+//            database.recordDao().insert(record3)
+//            database.recordDao().insert(record4)
+//            database.recordDao().insert(record5)
+//
+//            val list = database.recordDao().getAll()
+//            list.forEach {
+//                Log.d(
+//                    TAG, "MainActivity2: getAll: " +
+//                            "${it.id} , ${it.nickname} , ${it.counter}"
+//                )
+//            }
+//        }.start()
+        launch() {
+            val json = URL("https://api.jsonserve.com/pcLzBT").readText()
+            val jsonObject = JSONObject(json)
+            val array = jsonObject.getJSONArray("words")
+            for (i in 0..array.length() - 1) {
+                val w = array.getJSONObject(i)
+                val name = w.getString("name")
+                val means = w.getString("means")
+                Log.d(TAG, "MainActivity2: json: $name , $means")
+            }
+        }
 
     }
 
@@ -195,4 +250,7 @@ class MainActivity2 : AppCompatActivity() {
             Log.d(TAG, "onActivityResult, data: $nickname")
         }
     }
+
+    override val coroutineContext: CoroutineContext
+        get() = job
 }
