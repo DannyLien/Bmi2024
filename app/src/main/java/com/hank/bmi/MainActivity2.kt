@@ -31,7 +31,8 @@ import kotlin.coroutines.CoroutineContext
 import kotlin.random.Random
 
 class MainActivity2 : AppCompatActivity(), CoroutineScope {
-    private val job = Job()
+    private lateinit var myViewModel: MyViewModel
+    private val job = Job() + Dispatchers.IO
     private val NICKNAME_REQ: Int = 11
     private lateinit var viewModel: GuessViewModel
     private val TAG: String? = MainActivity2::class.java.simpleName
@@ -142,15 +143,8 @@ class MainActivity2 : AppCompatActivity(), CoroutineScope {
         }.start()
 
         // Json
-        launch() {
-            val json = URL("https://api.jsonserve.com/pcLzBT").readText()
-//            Log.d(TAG, "MainActivity: json: $json")
-//            parseJSON(json)
-            val words = Gson().fromJson(json, Words::class.java)
-            words.words.forEach {
-                Log.d(TAG, "MainActivity2: gson: ${it.name} , ${it.means}")
-            }
-        }
+        myViewModel = ViewModelProvider(this).get(MyViewModel::class.java)
+        myViewModel.readJSON()
 
     }
 

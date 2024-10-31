@@ -16,7 +16,7 @@ abstract class GameDatabase : RoomDatabase() {
             if (instance == null) {
                 instance = Room.databaseBuilder(
                     context,
-                    GameDatabase::class.java, "guess.db"
+                    GameDatabase::class.java, "game.db"
                 ).build()
             }
             return instance
