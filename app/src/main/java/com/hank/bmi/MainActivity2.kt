@@ -16,6 +16,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.loader.content.AsyncTaskLoader
 import androidx.room.Room
+import com.google.gson.Gson
 import com.hank.bmi.data.GameDatabase
 import com.hank.bmi.data.Record
 import com.hank.bmi.databinding.ActivityMainBinding
@@ -30,7 +31,7 @@ import kotlin.coroutines.CoroutineContext
 import kotlin.random.Random
 
 class MainActivity2 : AppCompatActivity(), CoroutineScope {
-    private val job = Job() + Dispatchers.IO
+    private val job = Job()
     private val NICKNAME_REQ: Int = 11
     private lateinit var viewModel: GuessViewModel
     private val TAG: String? = MainActivity2::class.java.simpleName
@@ -38,22 +39,18 @@ class MainActivity2 : AppCompatActivity(), CoroutineScope {
 
     //    val secret = (1..10).random()
     //    val game = GuessGame()
-    val requestNickname =
-        registerForActivityResult(
-            ActivityResultContracts.StartActivityForResult()
-        ) {
-            //SharedPreferrences
-            val nickname = getSharedPreferences("guess", MODE_PRIVATE)
-                .getString("nickname", null)
-            Log.d(TAG, "MainActivity2: SharedPreferences: $nickname")
-
-            //Intent
-            if (it.resultCode == RESULT_OK) {
-                val nickname = it.data?.getStringExtra("NICK")
-                Log.d(TAG, "MainActivity2: Result: $nickname")
-            }
-
+    val requestNickname = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) {
+        //SharedPreferrences
+        val nickname = getSharedPreferences("guess", MODE_PRIVATE).getString("nickname", null)
+        Log.d(TAG, "MainActivity2: SharedPreferences: $nickname")
+        //Intent
+        if (it.resultCode == RESULT_OK) {
+            val nickname = it.data?.getStringExtra("NICK")
+            Log.d(TAG, "MainActivity2: Result: $nickname")
         }
+    }
 
     override fun onRestart() {
         super.onRestart()
@@ -113,77 +110,59 @@ class MainActivity2 : AppCompatActivity(), CoroutineScope {
                 else -> "You got it!"
             }
             if (status != GameStatus.INIT) {
-                AlertDialog.Builder(this)
-                    .setTitle("Info")
-                    .setMessage(message)
+                AlertDialog.Builder(this).setTitle("Info").setMessage(message)
                     .setPositiveButton("OK") { dialog, which ->
                         binding.number.text.clear()
-                    }
-                    .setNegativeButton("Replay", { dialog, which ->
+                    }.setNegativeButton("Replay", { dialog, which ->
                         viewModel.reset()
                         binding.number.text.clear()
                     }).show()
             }
         })
 
-        //Room
+        // Room
         val record1 = Record("Hank", 3)
         val record2 = Record("Eric", 4)
         val record3 = Record("Moon", 5)
         val record4 = Record("Tom ", 6)
         val record5 = Record("Jack", 7)
-
-        AsyncTask.execute {
-
-        }
-
         Thread {
 //            GameDatabase.getInstance(this)?.recordDao()?.insert(record1)
 //            GameDatabase.getInstance(this)?.recordDao()?.insert(record2)
 //            GameDatabase.getInstance(this)?.recordDao()?.insert(record3)
 //            GameDatabase.getInstance(this)?.recordDao()?.insert(record4)
 //            GameDatabase.getInstance(this)?.recordDao()?.insert(record5)
-
             GameDatabase.getInstance(this)?.recordDao()?.getAll()
                 ?.forEach {
                     Log.d(
-                        TAG, "MainActivity: Room: " +
+                        TAG, "MainActivity2: Room: " +
                                 "${it.id} , ${it.nickname} , ${it.counter}"
                     )
                 }
         }.start()
 
-//        val database = Room.databaseBuilder(
-//            this,
-//            GameDatabase::class.java, "game.db"
-//        ).build()
-//        Thread {
-//            database.recordDao().insert(record1)
-//            database.recordDao().insert(record2)
-//            database.recordDao().insert(record3)
-//            database.recordDao().insert(record4)
-//            database.recordDao().insert(record5)
-//
-//            val list = database.recordDao().getAll()
-//            list.forEach {
-//                Log.d(
-//                    TAG, "MainActivity2: getAll: " +
-//                            "${it.id} , ${it.nickname} , ${it.counter}"
-//                )
-//            }
-//        }.start()
+        // Json
         launch() {
             val json = URL("https://api.jsonserve.com/pcLzBT").readText()
-            val jsonObject = JSONObject(json)
-            val array = jsonObject.getJSONArray("words")
-            for (i in 0..array.length() - 1) {
-                val w = array.getJSONObject(i)
-                val name = w.getString("name")
-                val means = w.getString("means")
-                Log.d(TAG, "MainActivity2: json: $name , $means")
+//            Log.d(TAG, "MainActivity: json: $json")
+//            parseJSON(json)
+            val words = Gson().fromJson(json, Words::class.java)
+            words.words.forEach {
+                Log.d(TAG, "MainActivity2: gson: ${it.name} , ${it.means}")
             }
         }
 
+    }
+
+    private fun parseJSON(json: String) {
+        val jsonObject = JSONObject(json)
+        val array = jsonObject.getJSONArray("words")
+        for (i in 0..array.length() - 1) {
+            val w = array.getJSONObject(i)
+            val name = w.getString("name")
+            val means = w.getString("means")
+            Log.d(TAG, "MainActivity2: json: $name , $means")
+        }
     }
 
     fun guess(view: View) {
@@ -192,8 +171,7 @@ class MainActivity2 : AppCompatActivity(), CoroutineScope {
 
         } else {
             Toast.makeText(this, "Please enter a number", Toast.LENGTH_LONG).show()
-        }
-        /*
+        }/*
         if (!binding.number.text.toString().equals("")) {
             val num = binding.number.text.toString().toInt()
             val massage = when (game.guess(num)) {
@@ -245,12 +223,13 @@ class MainActivity2 : AppCompatActivity(), CoroutineScope {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == NICKNAME_REQ) {
-            Log.d(TAG, "onActivityResult, resultCode: $resultCode")
+            Log.d(TAG, "MainActivity2, resultCode: $resultCode")
             val nickname = data?.getStringExtra("NICK")
-            Log.d(TAG, "onActivityResult, data: $nickname")
+            Log.d(TAG, "MainActivity2, data: $nickname")
         }
     }
 
     override val coroutineContext: CoroutineContext
         get() = job
+
 }
