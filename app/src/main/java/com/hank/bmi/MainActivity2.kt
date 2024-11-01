@@ -95,7 +95,7 @@ class MainActivity2 : AppCompatActivity(), CoroutineScope {
         viewModel = ViewModelProvider(this).get(GuessViewModel::class.java)
 
         viewModel.secretData.observe(this, Observer { secret ->
-            Toast.makeText(this, secret.toString(), Toast.LENGTH_SHORT).show()
+//            Toast.makeText(this, secret.toString(), Toast.LENGTH_SHORT).show()
             Log.d(TAG, "secret:$secret ")
         })
 
@@ -146,6 +146,11 @@ class MainActivity2 : AppCompatActivity(), CoroutineScope {
         myViewModel = ViewModelProvider(this).get(MyViewModel::class.java)
         myViewModel.readJSON()
 
+    }
+
+    fun btName(view: View) {
+        val intent = Intent(this, NameActivity::class.java)
+        startActivity(intent)
     }
 
     private fun parseJSON(json: String) {
