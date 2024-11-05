@@ -31,13 +31,11 @@ import kotlin.coroutines.CoroutineContext
 import kotlin.random.Random
 
 class MainActivity2 : AppCompatActivity(), CoroutineScope {
-    private lateinit var myViewModel: MyViewModel
     private val job = Job() + Dispatchers.IO
     private val NICKNAME_REQ: Int = 11
     private lateinit var viewModel: GuessViewModel
     private val TAG: String? = MainActivity2::class.java.simpleName
     private lateinit var binding: ActivityMainBinding
-
     //    val secret = (1..10).random()
     //    val game = GuessGame()
     val requestNickname = registerForActivityResult(
@@ -143,14 +141,9 @@ class MainActivity2 : AppCompatActivity(), CoroutineScope {
         }.start()
 
         // Json
-        myViewModel = ViewModelProvider(this).get(MyViewModel::class.java)
-        myViewModel.readJSON()
+//        myViewModel = ViewModelProvider(this).get(MyViewModel::class.java)
+//        myViewModel.readJSON()
 
-    }
-
-    fun btName(view: View) {
-        val intent = Intent(this, NameActivity::class.java)
-        startActivity(intent)
     }
 
     private fun parseJSON(json: String) {
@@ -162,6 +155,11 @@ class MainActivity2 : AppCompatActivity(), CoroutineScope {
             val means = w.getString("means")
             Log.d(TAG, "MainActivity2: json: $name , $means")
         }
+    }
+
+    fun btName(view: View) {
+        val intent = Intent(this, NameActivity::class.java)
+        startActivity(intent)
     }
 
     fun guess(view: View) {
