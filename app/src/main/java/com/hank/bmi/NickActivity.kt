@@ -60,11 +60,9 @@ class NickActivity : AppCompatActivity() {
                 .edit()
                 .putString("nickname", nickname)
                 .apply()
-
             //Intent
             setResult(RESULT_OK, intent.putExtra("NICK", nickname))
             finish()
-
         }
 
     }

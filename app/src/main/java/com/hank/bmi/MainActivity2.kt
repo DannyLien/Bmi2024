@@ -36,13 +36,15 @@ class MainActivity2 : AppCompatActivity(), CoroutineScope {
     private lateinit var viewModel: GuessViewModel
     private val TAG: String? = MainActivity2::class.java.simpleName
     private lateinit var binding: ActivityMainBinding
+
     //    val secret = (1..10).random()
     //    val game = GuessGame()
     val requestNickname = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) {
         //SharedPreferrences
-        val nickname = getSharedPreferences("guess", MODE_PRIVATE).getString("nickname", null)
+        val nickname = getSharedPreferences("guess", MODE_PRIVATE)
+            .getString("nickname", null)
         Log.d(TAG, "MainActivity2: SharedPreferences: $nickname")
         //Intent
         if (it.resultCode == RESULT_OK) {
@@ -85,22 +87,16 @@ class MainActivity2 : AppCompatActivity(), CoroutineScope {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
         Log.d(TAG, "onCreate: Act86")
-
 //        Toast.makeText(this, "secret:${game.secret}", Toast.LENGTH_LONG).show()
-
         viewModel = ViewModelProvider(this).get(GuessViewModel::class.java)
-
         viewModel.secretData.observe(this, Observer { secret ->
 //            Toast.makeText(this, secret.toString(), Toast.LENGTH_SHORT).show()
             Log.d(TAG, "secret:$secret ")
         })
-
         viewModel.counter.observe(this, Observer { counter ->
             binding.counter.text = counter.toString()
         })
-
         viewModel.status.observe(this, Observer { status ->
             val message = when (status) {
                 GameStatus.SMALLER -> "Smaller"

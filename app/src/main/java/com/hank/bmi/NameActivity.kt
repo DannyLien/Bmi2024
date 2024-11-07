@@ -40,7 +40,7 @@ class NameActivity : AppCompatActivity() {
 
     }
 
-    fun btName(view: View) {
+    fun btNameFinish(view: View) {
         finish()
     }
 

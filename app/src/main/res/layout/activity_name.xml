@@ -7,11 +7,11 @@
     tools:context=".NameActivity">
 
     <Button
-        android:id="@+id/btFinish"
+        android:id="@+id/btNameFinish"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:onClick="btFinish"
+        android:onClick="btNameFinish"
         android:text="Finish"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -21,9 +21,12 @@
         android:id="@+id/recycler"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btFinish" />
+        app:layout_constraintTop_toBottomOf="@+id/btNameFinish" />
 </androidx.constraintlayout.widget.ConstraintLayout>
