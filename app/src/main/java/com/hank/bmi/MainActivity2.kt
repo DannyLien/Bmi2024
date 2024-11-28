@@ -159,8 +159,10 @@ class MainActivity2 : AppCompatActivity(), CoroutineScope {
     }
 
     fun guess(view: View) {
+        Log.d(TAG, "MainActivity2:guess: ")
         if (!binding.number.text.toString().equals("")) {
-            viewModel.guess(binding.number.text.toString().toInt())
+            val num = binding.number.text.toString().toInt()
+            viewModel.guess(num)
 
         } else {
             Toast.makeText(this, "Please enter a number", Toast.LENGTH_LONG).show()
