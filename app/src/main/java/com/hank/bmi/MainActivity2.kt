@@ -1,36 +1,39 @@
 package com.hank.bmi
 
-import android.content.DialogInterface
-import android.content.DialogInterface.OnClickListener
+import android.Manifest
 import android.content.Intent
-import android.os.AsyncTask
+import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
-import android.util.Range
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.loader.content.AsyncTaskLoader
-import androidx.room.Room
-import com.google.gson.Gson
+import com.google.android.material.snackbar.Snackbar
 import com.hank.bmi.data.GameDatabase
 import com.hank.bmi.data.Record
 import com.hank.bmi.databinding.ActivityMainBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
-import okhttp3.internal.notify
 import org.json.JSONObject
-import java.net.URL
 import kotlin.coroutines.CoroutineContext
-import kotlin.random.Random
 
 class MainActivity2 : AppCompatActivity(), CoroutineScope {
+    private val requestionPermission =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { success ->
+            if (success) {
+                takePoto()
+            } else {
+                Snackbar.make(binding.root, "Denied", Snackbar.LENGTH_LONG).show()
+            }
+        }
     private val job = Job() + Dispatchers.IO
     private val NICKNAME_REQ: Int = 11
     private lateinit var viewModel: GuessViewModel
@@ -135,11 +138,41 @@ class MainActivity2 : AppCompatActivity(), CoroutineScope {
                     )
                 }
         }.start()
-
         // Json
 //        myViewModel = ViewModelProvider(this).get(MyViewModel::class.java)
 //        myViewModel.readJSON()
 
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.main_menu, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+//        return super.onOptionsItemSelected(item)
+        return when (item.itemId) {
+            R.id.action_camera -> {
+                if (checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+                    // startActivity(Intent(MediaStore.ACTION_IMAGE_CAPTURE_SECURE))
+                    takePoto()
+                } else {
+                    requestionPermission.launch(Manifest.permission.CAMERA)
+                }
+                true
+            }
+
+            R.id.action_setting -> {
+                true
+            }
+
+            R.id.action_test -> true
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    private fun takePoto() {
+        startActivity(Intent(MediaStore.ACTION_IMAGE_CAPTURE))
     }
 
     private fun parseJSON(json: String) {
@@ -178,7 +211,6 @@ class MainActivity2 : AppCompatActivity(), CoroutineScope {
             val okLisener = object : OnClickListener {
                 override fun onClick(p0: DialogInterface?, p1: Int) {
                     Log.d(TAG, "okLisener: ")
-                    TODO()
                 }
             }
             AlertDialog.Builder(this)
@@ -195,7 +227,6 @@ class MainActivity2 : AppCompatActivity(), CoroutineScope {
         } else {
             Toast.makeText(this, getString(R.string.please_enter_a_number), Toast.LENGTH_LONG)
                 .show()
-
         }
         */
     }
