@@ -172,7 +172,7 @@ class MainActivity2 : AppCompatActivity(), CoroutineScope {
     }
 
     private fun takePoto() {
-        startActivity(Intent(MediaStore.ACTION_IMAGE_CAPTURE))
+        startActivity(Intent(MediaStore.INTENT_ACTION_STILL_IMAGE_CAMERA))
     }
 
     private fun parseJSON(json: String) {
