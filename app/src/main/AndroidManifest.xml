@@ -20,6 +20,9 @@
         android:theme="@style/Theme.Material3.Light.NoActionBar"
         tools:targetApi="31">
         <activity
+            android:name=".NewsActivity"
+            android:exported="false" />
+        <activity
             android:name=".NameActivity"
             android:exported="false" />
         <activity
@@ -38,9 +41,7 @@
         </activity>
         <activity
             android:name=".MainActivity"
-            android:exported="true">
-
-        </activity>
+            android:exported="true"></activity>
     </application>
 
 </manifest>

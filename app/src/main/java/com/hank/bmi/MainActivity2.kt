@@ -162,6 +162,13 @@ class MainActivity2 : AppCompatActivity(), CoroutineScope {
                 true
             }
 
+            R.id.action_news -> {
+                Intent(this, NewsActivity::class.java).also {
+                    startActivity(it)
+                }
+                true
+            }
+
             R.id.action_setting -> {
                 true
             }

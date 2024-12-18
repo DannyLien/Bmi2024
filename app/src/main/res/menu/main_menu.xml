@@ -8,6 +8,9 @@
         android:title="Camera"
         app:showAsAction="ifRoom" />
     <item
+        android:id="@+id/action_news"
+        android:title="News Fragment" />
+    <item
         android:id="@+id/action_setting"
         android:title="Setting" />
     <item
