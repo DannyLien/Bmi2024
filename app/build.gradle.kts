@@ -58,8 +58,6 @@ dependencies {
     // Gson
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
     implementation("com.google.code.gson:gson:2.11.0")
-    // Gson
-    // implementation ("com.google.code.gson:gson:2.10.1")
     // Room
     val room_version = "2.6.1"
     implementation("androidx.room:room-runtime:$room_version")
