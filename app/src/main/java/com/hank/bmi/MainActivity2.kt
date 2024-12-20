@@ -77,8 +77,9 @@ class MainActivity2 : AppCompatActivity(), CoroutineScope {
     }
 
     override fun onStop() {
+        Log.d(TAG, "onStop: Act86: service:")
+        stopService(getCache)
         super.onStop()
-        Log.d(TAG, "onStop: Act86")
     }
 
     override fun onDestroy() {
@@ -149,6 +150,13 @@ class MainActivity2 : AppCompatActivity(), CoroutineScope {
         return super.onCreateOptionsMenu(menu)
     }
 
+
+    private val getCache: Intent
+        get() {
+            val cache = Intent(this, CacheService::class.java)
+            return cache
+        }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 //        return super.onOptionsItemSelected(item)
         return when (item.itemId) {
@@ -173,7 +181,12 @@ class MainActivity2 : AppCompatActivity(), CoroutineScope {
                 true
             }
 
-            R.id.action_test -> true
+            R.id.action_test -> {
+                val cache = getCache
+                startService(cache)
+                true
+            }
+
             else -> super.onOptionsItemSelected(item)
         }
     }
